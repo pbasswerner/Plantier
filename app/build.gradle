@@ -1,7 +1,14 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
 }
+
+ext.githubToken = System.getenv('SECRET_CI_TOKEN') ?: project.findProperty("github_password")
+ext.githubUsername = System.getenv('SECRET_CI_USERNAME') ?: project.findProperty("github_username")
+ext.githubRepoName = "GitHubPackages"
+ext.githubRepoUrl = "https://maven.pkg.github.com/pisontechnology/thanos"
 
 android {
     compileSdk 30
@@ -9,7 +16,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.plantier"
-        minSdk 21
+        minSdk 26
         targetSdk 30
         versionCode 1
         versionName "1.0"
@@ -25,7 +32,15 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            matchingFallbacks = ['debug', 'release']
+        }
     }
+
+    dataBinding {
+        enabled = true
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -39,22 +54,77 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
-        kotlinCompilerVersion '1.4.32'
+        kotlinCompilerVersion '1.5.21'
+    }
+}
+
+repositories {
+    google()
+    jcenter()
+    mavenCentral()
+    maven { url  "https://kotlin.bintray.com/kotlinx/" }
+    maven { url "https://dl.bintray.com/badoo/maven" }
+    maven {
+        name = githubRepoName
+        url = githubRepoUrl
+        credentials {
+            username = githubUsername
+            password = githubToken
+        }
     }
 }
 
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.6.0'
-    implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'com.google.android.material:material:1.4.0'
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.material:material:$compose_version"
     implementation "androidx.compose.ui:ui-tooling:$compose_version"
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
-    implementation 'androidx.activity:activity-compose:1.3.0-rc02'
-    testImplementation 'junit:junit:4.+'
+    implementation 'androidx.activity:activity-compose:1.3.1'
+    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
+
+    //ble to clue
+    implementation 'no.nordicsemi.android:ble-ktx:2.3.0'
+
+    //reaktive
+    def reaktiveVersion = '1.2.0'
+    implementation "com.badoo.reaktive:reaktive:$reaktiveVersion"
+
+    //ktor
+    def ktor_version = '1.4.0'
+    implementation "io.ktor:ktor-client-core:$ktor_version"
+    implementation "io.ktor:ktor-client-cio:$ktor_version"
+    implementation "io.ktor:ktor-client-websockets:$ktor_version"
+
+    //pison
+    implementation fileTree(dir: "libs", include: ["*.aar", "*.jar"])
+    implementation 'com.pison.core:client-android:0.7.1-e494cc72e5'
+
+    //compose
+    def composeVersion = "1.1.0-alpha01"
+    implementation 'androidx.webkit:webkit:1.4.0'
+    implementation "androidx.compose.ui:ui:$composeVersion"
+    // Tooling support (Previews, etc.)
+    implementation "androidx.compose.ui:ui-tooling:$composeVersion"
+    // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
+    implementation "androidx.compose.foundation:foundation:$composeVersion"
+    // Material Design
+    implementation "androidx.compose.material:material:$composeVersion"
+    // Material design icons
+    implementation "androidx.compose.material:material-icons-core:$composeVersion"
+    implementation "androidx.compose.material:material-icons-extended:$composeVersion"
+    // Integration with activities
+    implementation 'androidx.activity:activity-compose:1.3.1'
+    // Integration with ViewModels
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07'
+    // Integration with observables
+    implementation "androidx.compose.runtime:runtime-livedata:$composeVersion"
+    implementation "androidx.compose.compiler:compiler:$composeVersion"
+    implementation "androidx.compose.runtime:runtime-rxjava2:$composeVersion"
 }
