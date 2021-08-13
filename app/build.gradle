@@ -90,7 +90,8 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
 
     //ble to clue
-    implementation 'no.nordicsemi.android:ble-ktx:2.3.0'
+    def kableVersion = '0.7.1'
+    implementation "com.juul.kable:core:$kableVersion"
 
     //reaktive
     def reaktiveVersion = '1.2.0'
@@ -127,4 +128,7 @@ dependencies {
     implementation "androidx.compose.runtime:runtime-livedata:$composeVersion"
     implementation "androidx.compose.compiler:compiler:$composeVersion"
     implementation "androidx.compose.runtime:runtime-rxjava2:$composeVersion"
+
+    //Permissions
+    implementation 'com.vmadalin:easypermissions-ktx:1.0.0'
 }
