@@ -93,13 +93,16 @@ fun Landing(
         .fillMaxSize()
         .background(color = MaterialTheme.colors.background)) {
         Image(
-            painter = painterResource(R.drawable.ic_launcher_background),
+            painter = painterResource(R.drawable.back),
             contentDescription = null,
             modifier = Modifier
                 .fillMaxSize(),
             contentScale = ContentScale.FillBounds
         )
-        Button(onClick = { onClick() }, Modifier.align(Alignment.Center)) {
+        Button(onClick = { onClick() },
+            Modifier.align(Alignment.Center),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.White)
+            ) {
             Text(text = "Connect")
         }
     }
